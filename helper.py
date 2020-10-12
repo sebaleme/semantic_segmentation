@@ -7,6 +7,8 @@ import shutil
 import zipfile
 import time
 import tensorflow as tf
+import imageio
+from PIL import Image
 from glob import glob
 from glob import glob1
 from urllib.request import urlretrieve
@@ -156,8 +158,10 @@ def gen_output(sess, logits, keep_prob, image_pl, data_folder, image_shape):
     """
     for image_file in glob(os.path.join(data_folder, '*.png')):
 
-
-        image = scipy.misc.imresize(scipy.misc.imread(image_file), image_shape)
+        # image_file is a list
+        Imarray = Image.fromarray(imageio.imread(image_file))
+        NormalizedImage = Imarray.resize(image_shape)
+        image = np.array(NormalizedImage)
         startTime = time.clock()
         im_softmax = sess.run(
             [tf.nn.softmax(logits)],
@@ -165,8 +169,9 @@ def gen_output(sess, logits, keep_prob, image_pl, data_folder, image_shape):
         im_softmax = im_softmax[0][:, 1].reshape(image_shape[0], image_shape[1])
         segmentation = (im_softmax > 0.5).reshape(image_shape[0], image_shape[1], 1)
         mask = np.dot(segmentation, np.array([[0, 255, 0, 127]]))
-        mask = scipy.misc.toimage(mask, mode="RGBA")
-        street_im = scipy.misc.toimage(image)
+        mask = Image.fromarray(mask, 'RGBA')
+        street_im = Image.fromarray(image)
+
         street_im.paste(mask, box=None, mask=mask)
 
         endTime = time.clock()
@@ -190,7 +195,7 @@ def pred_samples(runs_dir, data_dir, sess, image_shape, logits, keep_prob, input
 
     counter = 0
     for name, image, speed_ in image_outputs:
-        scipy.misc.imsave(os.path.join(output_dir, name), image)
+        imageio.imwrite(os.path.join(output_dir, name), image)
         if print_speed is True:
             counter+=1
             print("Processing file: {0:05d},\tSpeed: {1:.2f} fps".format(counter, speed_))

@@ -1,5 +1,5 @@
 import os.path
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 import helper
 import warnings
 from distutils.version import LooseVersion
@@ -62,22 +62,22 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
     vgg_layer7_logits = tf.layers.conv2d(
         vgg_layer7_out, num_classes, kernel_size=1,
         kernel_initializer= tf.random_normal_initializer(stddev=0.01),
-        kernel_regularizer= tf.contrib.layers.l2_regularizer(1e-4), name='vgg_layer7_logits')
+        kernel_regularizer= tf.keras.regularizers.L2(l2=1e-4), name='vgg_layer7_logits')
     vgg_layer4_logits = tf.layers.conv2d(
         vgg_layer4_out, num_classes, kernel_size=1,
         kernel_initializer= tf.random_normal_initializer(stddev=0.01),
-        kernel_regularizer= tf.contrib.layers.l2_regularizer(1e-4), name='vgg_layer4_logits')
+        kernel_regularizer= tf.keras.regularizers.L2(l2=1e-4), name='vgg_layer4_logits')
     vgg_layer3_logits = tf.layers.conv2d(
         vgg_layer3_out, num_classes, kernel_size=1,
         kernel_initializer= tf.random_normal_initializer(stddev=0.01),
-        kernel_regularizer= tf.contrib.layers.l2_regularizer(1e-4), name='vgg_layer3_logits')
+        kernel_regularizer= tf.keras.regularizers.L2(l2=1e-4), name='vgg_layer3_logits')
 
     # # Apply the transposed convolutions to get upsampled version, and then merge the upsampled layers
     fcn_decoder_layer1 = tf.layers.conv2d_transpose(
         vgg_layer7_logits, num_classes, kernel_size=4, strides=(2, 2),
         padding='same',
         kernel_initializer= tf.random_normal_initializer(stddev=0.01),
-        kernel_regularizer= tf.contrib.layers.l2_regularizer(1e-4), name='fcn_decoder_layer1')
+        kernel_regularizer= tf.keras.regularizers.L2(l2=1e-4), name='fcn_decoder_layer1')
 
     # add the first skip connection from the vgg_layer4_out
     fcn_decoder_layer2 = tf.add(
@@ -88,7 +88,7 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
         fcn_decoder_layer2, num_classes, kernel_size=4, strides=(2, 2),
         padding='same',
         kernel_initializer= tf.random_normal_initializer(stddev=0.01),
-        kernel_regularizer= tf.contrib.layers.l2_regularizer(1e-4), name='fcn_decoder_layer3')
+        kernel_regularizer= tf.keras.regularizers.L2(l2=1e-4), name='fcn_decoder_layer3')
 
     # apply the same steps for the third layer output.
     fcn_decoder_layer4 = tf.add(
@@ -97,7 +97,7 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
         fcn_decoder_layer4, num_classes, kernel_size=16, strides=(8, 8),
         padding='same',
         kernel_initializer= tf.random_normal_initializer(stddev=0.01),
-        kernel_regularizer= tf.contrib.layers.l2_regularizer(1e-4), name='fcn_decoder_layer4')
+        kernel_regularizer= tf.keras.regularizers.L2(l2=1e-4), name='fcn_decoder_layer4')
 
     return fcn_decoder_output
 
@@ -249,7 +249,7 @@ def predict_images(test_data_path, print_speed=False):
 
 if __name__ == '__main__':
 
-    training_flag = True   # True: train the NN; False: predict with trained NN
+    training_flag = False   # True: train the NN; False: predict with trained NN
 
     if training_flag:
         # run unittest before training

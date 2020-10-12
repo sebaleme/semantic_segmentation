@@ -32,15 +32,15 @@ with KITTI dataset for road segmentation.
 
 
 
-#### 1.2 Dependencies & my environment
+#### 1.2 Dependencies & current environment
 
 Miniconda is used for managing my [**dependencies**](env-gpu-py35.yml).
 
-* Python3.5, tensorflow-gpu, CUDA8, Numpy, SciPy
-* OS: Ubuntu 16.04
-* CPU: Intel® Core™ i7-6820HK CPU @ 2.70GHz × 8
-* GPU: GeForce GTX 980M (8G memory)
-* Memory: 32G
+* Python3.5, tensorflow-gpu, CUDA11, Numpy, SciPy
+* OS: Ubuntu 18.04
+* CPU: Intel® Xeon® E5-1620 
+* GPU: Quadro M2000 (4G memory)
+* Memory: 4G
 
 #### 1.3 How to run the code
 

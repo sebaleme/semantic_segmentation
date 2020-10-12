@@ -1,0 +1,23 @@
+# Catkin custom files
+.idea/
+.ipynb_checkpoints/*.*
+
+# Python temp files
+*.pyc
+
+# Archives
+*.zip
+
+# added inputs
+*.png
+
+# generated output
+*.txt
+
+# model related files
+model/
+data/vgg/
+
+
+
+
